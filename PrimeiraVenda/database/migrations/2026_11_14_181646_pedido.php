@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('cliente_nome', 255);
-            $table->string('clinte_telefone', 11);
+            $table->string('cliente_telefone', 11);
             $table->decimal('valor_total', 10, 2);
             $table->string('status')->default(StatusPedido::pendente->value);
             $table->string('pix_copia_cola');
