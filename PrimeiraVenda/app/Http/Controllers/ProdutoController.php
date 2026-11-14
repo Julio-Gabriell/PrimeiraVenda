@@ -14,7 +14,7 @@ class ProdutoController extends Controller
      */
     public function index(): JsonResponse
     {
-        $produtos = Produto::all();
+        $produtos = Produto::with('estoque')->get();
 
         return response()->json($produtos);
     }
