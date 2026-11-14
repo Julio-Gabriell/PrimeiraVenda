@@ -24,25 +24,13 @@ class WebhookService
 
         $payload = [
             'evento' => $evento,
-            'pedido_id' => $pedido->id,
-            'cliente' => [
-                'nome' => $pedido->cliente_nome,
-                'telefone' => $pedido->cliente_telefone,
+            'pedido' => [
+                'id' => $pedido->id,
+                'cliente_nome' => $pedido->cliente_nome,
+                'valor_total' => (float) $pedido->valor_total,
+                'status' => $pedido->status instanceof \BackedEnum ? $pedido->status->value : $pedido->status,
+                'pago_em' => $pedido->pago_em?->toIso8601String() ?? $pedido->pago_em,
             ],
-            'valor_total' => (float) $pedido->valor_total,
-            'status' => $pedido->status instanceof \BackedEnum ? $pedido->status->value : $pedido->status,
-            'pix_copia_cola' => $pedido->pix_copia_cola,
-            'checkout_url' => $pedido->checkout_url,
-            'criado_em' => $pedido->created_at?->toIso8601String(),
-            'pago_em' => $pedido->pago_em?->toIso8601String(),
-            'itens' => $pedido->itens->map(fn ($item) => [
-                'id' => $item->id,
-                'produto_id' => $item->produto_id,
-                'produto_nome' => $item->produto?->nome,
-                'quantidade' => (int) $item->quantidade,
-                'preco_unitario' => (float) $item->preco_unitario,
-                'subtotal' => round($item->quantidade * $item->preco_unitario, 2),
-            ])->values()->toArray(),
         ];
 
         try {

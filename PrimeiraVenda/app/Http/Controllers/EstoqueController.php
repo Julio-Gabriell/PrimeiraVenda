@@ -87,3 +87,4 @@ class EstoqueController extends Controller
         ]);
     }
 }
+
