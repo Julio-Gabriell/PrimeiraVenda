@@ -13,7 +13,7 @@ class WebhookService
      */
     public static function enviarVenda(Pedido $pedido, string $evento = 'venda_realizada'): array
     {
-        $url = config('services.n8n.webhook_vendas', 'https://n8n.vendai.app.br/webhook-test/primeiravenda/vendas');
+        $url = config('services.n8n.webhook_vendas', 'https://n8n.vendai.app.br/webhook/primeiravenda/vendas');
 
         if (empty($url)) {
             Log::warning('Webhook de vendas não configurado.');
