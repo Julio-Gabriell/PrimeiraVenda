@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Produto;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProdutoController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $produtos = Produto::all();
 
@@ -20,50 +22,49 @@ class ProdutoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $dados = validated($request);
-
-        $produto = Produto::create([
-            'nome' => $dados['nome'],
-            'descricao' => $dados['descricao'],
-            'categoria' => $dados['categoria'],
-            'preco' => $dados['preco'],
-            'url_imagem' => $dados['url_imagem'],
-            'ativo' => $dados['ativo'],
+        $dados = $request->validate([
+            'nome' => ['required', 'string', 'max:255'],
+            'descricao' => ['nullable', 'string'],
+            'categoria' => ['nullable', 'string', 'max:255'],
+            'preco' => ['required', 'numeric', 'min:0'],
+            'url_imagem' => ['nullable', 'string', 'max:255'],
+            'ativo' => ['nullable', 'boolean'],
         ]);
 
-        return response()->json($produto);
+        $produto = Produto::create($dados);
+
+        return response()->json($produto, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
-        $produto = Produto::findOrFail($id);
+        $produto = Produto::with('estoque')->findOrFail($id);
 
         return response()->json($produto);
     }
 
-
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): JsonResponse
     {
         $produto = Produto::findOrFail($id);
 
-        $dados = validated($request);
-
-        $produto = Produto::update([
-            'nome' => $dados['nome'],
-            'descricao' => $dados['descricao'],
-            'categoria' => $dados['categoria'],
-            'preco' => $dados['preco'],
-            'url_imagem' => $dados['url_imagem'],
-            'ativo' => $dados['ativo'],
+        $dados = $request->validate([
+            'nome' => ['sometimes', 'required', 'string', 'max:255'],
+            'descricao' => ['nullable', 'string'],
+            'categoria' => ['nullable', 'string', 'max:255'],
+            'preco' => ['sometimes', 'required', 'numeric', 'min:0'],
+            'url_imagem' => ['nullable', 'string', 'max:255'],
+            'ativo' => ['sometimes', 'boolean'],
         ]);
+
+        $produto->update($dados);
 
         return response()->json($produto);
     }
@@ -71,10 +72,12 @@ class ProdutoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): Response
     {
         $produto = Produto::findOrFail($id);
 
-        $produto::delete();
+        $produto->delete();
+
+        return response()->noContent();
     }
 }

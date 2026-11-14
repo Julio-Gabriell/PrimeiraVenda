@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('produto', function(Blueprint $table) {
+        Schema::create('produto', function (Blueprint $table) {
             $table->id();
             $table->string('nome', 255);
-            $table->string('descricao', 255);
-            $table->string('categoria', 255);
+            $table->text('descricao')->nullable();
+            $table->string('categoria', 255)->nullable();
             $table->decimal('preco', 10, 2);
-            $table->string('url_imagem', 255);
-            $table->boolean('ativo')->default(false);
+            $table->string('url_imagem', 255)->nullable();
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
         });
     }

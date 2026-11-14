@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Product extends Model
+class Produto extends Model
 {
     use HasFactory;
 
@@ -24,4 +26,14 @@ class Product extends Model
         'ativo' => 'boolean',
         'preco' => 'decimal:2',
     ];
+
+    public function estoque(): HasOne
+    {
+        return $this->hasOne(Estoque::class, 'produto_id');
+    }
+
+    public function itens(): HasMany
+    {
+        return $this->hasMany(ItemPedido::class, 'produto_id');
+    }
 }

@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('item_pedido', function(Blueprint $table) {
+        Schema::create('item_pedido', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('pedido_id')
-                  ->constrained('pedido');
-            
+                  ->constrained('pedido')
+                  ->cascadeOnDelete();
             $table->foreignId('produto_id')
-                  ->constrained('produtos');
-
-            $table->integer('quantidade');
+                  ->constrained('produto');
+            $table->integer('quantidade')->default(1);
             $table->decimal('preco_unitario', 10, 2);
         });
     }

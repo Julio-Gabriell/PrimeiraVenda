@@ -3,9 +3,9 @@
 namespace App\Enums;
 
 enum StatusPedido: string {
-    case pendente = 'pendente';
-    case pago = 'pago';
-    case cancelado = 'cancelado';
+    case pendente = 'PENDENTE';
+    case pago = 'PAGO';
+    case cancelado = 'CANCELADO';
 
     public function label(): string {
         return match ($this) {
