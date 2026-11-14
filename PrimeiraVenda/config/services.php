@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'n8n' => [
+        'webhook_vendas' => env('WEBHOOK_VENDAS_URL', 'https://n8n.vendai.app.br/webhook-test/primeiravenda/vendas'),
+    ],
+
 ];

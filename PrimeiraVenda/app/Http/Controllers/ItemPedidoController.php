@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Origem;
+use App\Models\Estoque;
 use App\Models\ItemPedido;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,7 +35,14 @@ class ItemPedidoController extends Controller
 
         $itemPedido = ItemPedido::create($dados);
 
-        return response()->json($itemPedido, 201);
+        // Baixa automática no estoque ao vincular item
+        $estoque = Estoque::firstOrNew(['produto_id' => $dados['produto_id']]);
+        $estoque->quantidade = max(0, (int) $estoque->quantidade - (int) $dados['quantidade']);
+        $estoque->ultima_origem = Origem::venda_online;
+        $estoque->atualizado_em = now();
+        $estoque->save();
+
+        return response()->json($itemPedido->load(['pedido', 'produto']), 201);
     }
 
     /**
